@@ -1,0 +1,41 @@
+name: Node.js CI with MySQL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mydb
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Specify your desired Node.js version
+
+      - name: Install sequelize globally
+        run: npm install -g sequelize-cli
+
+      - name: Install typescript globally
+        run: npm install -g ts-node
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run database migrations
+        run: npm run migrate-and-start
