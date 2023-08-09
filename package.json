@@ -8,7 +8,8 @@
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "migrate": "sequelize-cli db:migrate",
-    "migrate-and-start": "npm run migrate && npm run dev"
+    "migrate-and-start": "npm run migrate && npm run dev",
+    "migrate-and-build": "npm run migrate && npm run build"
   },
   "author": "",
   "license": "ISC",

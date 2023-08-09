@@ -39,4 +39,4 @@ jobs:
         run: npm install
 
       - name: Run database migrations
-        run: npm run migrate-and-start &
+        run: npm run migrate-and-build
