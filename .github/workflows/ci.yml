@@ -2,7 +2,7 @@ name: Node.js CI with MySQL
 
 on:
   pull_request:
-    types:
+    types: # Add action types here
       - opened
       - synchronize
 
