@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+  user-db:
+    container_name: 'user-db'
+    image: mysql:latest
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd
+      MYSQL_PASSWORD: abcd
+      DB_USERNAME: root
+      DB_PASSWORD: abcd
+      DB_NAME: mydb
+      TEST_DB_NAME: mytestdb
+      NODE_ENV: development
+      PORT: 7000
+      DB_HOST: user-db
+      DB_PORT: 3306
+      API_BASE_ENDPOINT: http://localhost:3000
+    ports:
+      - '4306:3306'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - shopping-cart-service-network
+
+  user-service:
+    container_name: user-service
+    image: user-service
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd
+      MYSQL_PASSWORD: abcd
+      DB_USERNAME: root
+      DB_PASSWORD: abcd
+      DB_NAME: mydb
+      TEST_DB_NAME: mytestdb
+      NODE_ENV: development
+      PORT: 80
+      DB_HOST: user-db
+      DB_PORT: 3306
+      PRODUCT_API_ENDPOINT: http://product-service:80
+      ORDER_API_ENDPOINT: http://order-service:80
+      PAYMENT_API_ENDPOINT: http://payment-service:80
+    restart: always
+    build: .
+    ports:
+      - '7000:80'
+    volumes:
+      - .:/app/userService
+    depends_on:
+      - user-db
+    networks:
+      - shopping-cart-service-network
